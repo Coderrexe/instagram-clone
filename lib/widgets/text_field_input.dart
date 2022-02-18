@@ -8,8 +8,10 @@ class TextFieldInput extends StatelessWidget {
     this.isPassword = false,
     required this.hintText,
     required this.textInputType,
+    this.validator,
   }) : super(key: key);
 
+  // TextEditingController class helps us handle changes to a text field.
   final TextEditingController textEditingController;
 
   // If text field is for password, we have to obscure the text.
@@ -20,11 +22,14 @@ class TextFieldInput extends StatelessWidget {
   // type depending on which field the user is entering (email, username, etc.).
   final TextInputType textInputType;
 
+  // Function to check if the user input is acceptable.
+  final FormFieldValidator<String>? validator;
+
   @override
   Widget build(BuildContext context) {
-    final inputBorder = OutlineInputBorder(
-        borderSide: Divider.createBorderSide(context));
-    return TextField(
+    final inputBorder =
+        OutlineInputBorder(borderSide: Divider.createBorderSide(context));
+    return TextFormField(
       controller: textEditingController,
       decoration: InputDecoration(
         hintText: hintText,
@@ -36,6 +41,7 @@ class TextFieldInput extends StatelessWidget {
       ),
       keyboardType: textInputType,
       obscureText: isPassword,
+      validator: validator,
     );
   }
 }
