@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:instagram_clone/services/auth_methods.dart';
+import 'package:instagram_clone/services/utils.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/text_field_input.dart';
 
@@ -27,6 +31,9 @@ class _SignupScreenState extends State<SignupScreen> {
   // Helper for creating a new user and adding information to database.
   final _authMethods = AuthMethods();
 
+  // User's profile picture, to be updated when the user selects a picture.
+  Uint8List? _profilePicture;
+
   @override
   void dispose() {
     super.dispose();
@@ -34,6 +41,13 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _bioController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List? image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _profilePicture = image;
+    });
   }
 
   @override
@@ -68,16 +82,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 64.0),
                 Stack(
                   children: [
-                    const CircleAvatar(
-                      radius: 64.0,
-                      backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1645095540331-6b05e0d3b5bc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'),
-                    ),
+                    _profilePicture != null
+                        ? CircleAvatar(
+                            radius: 64.0,
+                            backgroundImage: MemoryImage(_profilePicture!),
+                          )
+                        : const CircleAvatar(
+                            radius: 64.0,
+                            backgroundImage: AssetImage(
+                                'assets/default_profile_picture.jpeg'),
+                          ),
                     Positioned(
                       bottom: -10.0,
                       left: 80.0,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          selectImage();
+                        },
                         icon: const Icon(Icons.add_a_photo),
                       ),
                     )
@@ -163,12 +184,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       // Sign up user and upload information to database.
-                      _authMethods.signUpWithEmailAndPassword(
+                      _authMethods
+                          .signUpWithEmailAndPassword(
                         username: _usernameController.text.trim(),
                         email: _emailController.text.trim(),
                         password: _passwordController.text,
                         bio: _bioController.text,
-                      ).then((user) async {
+                        profilePicture: _profilePicture,
+                      )
+                          .then((user) async {
                         if (user.runtimeType == User) {
                           print('worked');
                         }

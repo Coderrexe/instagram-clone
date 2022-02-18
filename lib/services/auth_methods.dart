@@ -16,7 +16,7 @@ class AuthMethods {
     required String email,
     required String password,
     required String bio,
-    // required Uint8List profilePicture,
+    Uint8List? profilePicture,
   }) async {
     try {
       // Wait for Firebase to create the user.

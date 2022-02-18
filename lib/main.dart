@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Widgets to help build responsive design.
-import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
-import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
-import 'package:instagram_clone/responsive/web_screen_layout.dart';
+// import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
+// import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
+// import 'package:instagram_clone/responsive/web_screen_layout.dart';
+import 'package:instagram_clone/screens/user_auth/signup_screen.dart';
 // App theme colors, to be reused within the codebase.
 import 'package:instagram_clone/theme.dart';
 
@@ -45,10 +46,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileScreenLayout(),
-        webScreenLayout: WebScreenLayout(),
-      ),
+      // home: const ResponsiveLayout(
+      //   mobileScreenLayout: MobileScreenLayout(),
+      //   webScreenLayout: WebScreenLayout(),
+      // ),
+      home: const SignupScreen(),
     );
   }
 }
