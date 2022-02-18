@@ -1,17 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 // Widgets to help build responsive design.
 import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
 import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
 import 'package:instagram_clone/responsive/web_screen_layout.dart';
-
+import 'package:instagram_clone/screens/signup_screen.dart';
 // App theme colors, to be reused within the codebase.
 import 'package:instagram_clone/theme.dart';
 
 void main() async {
-  // Load Flutter widgets before initializing Firebase app.
+  // We have to load Flutter widgets before initializing Firebase app.
   // There would be an error if we don't do this step.
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase app.
@@ -46,10 +46,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileScreenLayout(),
-        webScreenLayout: WebScreenLayout(),
-      ),
+      // home: const ResponsiveLayout(
+      //   mobileScreenLayout: MobileScreenLayout(),
+      //   webScreenLayout: WebScreenLayout(),
+      // ),
+      home: SignupScreen(),
     );
   }
 }
