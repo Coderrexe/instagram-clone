@@ -50,6 +50,27 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
+  void signUpUser() async {
+    // Check if user information are acceptable (e.g. email address is valid,
+    // password is strong, username is not too long, etc.).
+    if (_formKey.currentState!.validate()) {
+      // Sign up user and upload information to database.
+      _authMethods
+          .signUpWithEmailAndPassword(
+        username: _usernameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        bio: _bioController.text,
+        profilePicture: _profilePicture,
+      )
+          .then((user) async {
+        if (user.runtimeType == User) {
+          print('worked');
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -181,24 +202,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 // Login button.
                 InkWell(
-                  onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      // Sign up user and upload information to database.
-                      _authMethods
-                          .signUpWithEmailAndPassword(
-                        username: _usernameController.text.trim(),
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text,
-                        bio: _bioController.text,
-                        profilePicture: _profilePicture,
-                      )
-                          .then((user) async {
-                        if (user.runtimeType == User) {
-                          print('worked');
-                        }
-                      });
-                    }
-                  },
+                  onTap: signUpUser,
                   child: Container(
                     child: const Text('Sign Up'),
                     width: double.infinity,
