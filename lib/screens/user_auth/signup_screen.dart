@@ -34,6 +34,9 @@ class _SignupScreenState extends State<SignupScreen> {
   // User's profile picture, to be updated when the user selects a picture.
   Uint8List? _profilePicture;
 
+  // Whether or not to show loading animation.
+  bool _isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -50,7 +53,11 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void signUpUser() async {
+  void signUpUserWithEmail() async {
+    // Show loading animation.
+    setState(() {
+      _isLoading = true;
+    });
     // Check if user information are acceptable (e.g. email address is valid,
     // password is strong, username is not too long, etc.).
     if (_formKey.currentState!.validate()) {
@@ -64,6 +71,10 @@ class _SignupScreenState extends State<SignupScreen> {
         profilePicture: _profilePicture,
       )
           .then((user) async {
+        // Stop loading animation.
+        setState(() {
+          _isLoading = false;
+        });
         if (user.runtimeType == User) {
         } else if (user.runtimeType == String) {
           // If an error occurs, we show a snack bar.
@@ -210,9 +221,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 // Login button.
                 InkWell(
-                  onTap: signUpUser,
+                  onTap: signUpUserWithEmail,
                   child: Container(
-                    child: const Text('Sign Up'),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          )
+                        : const Text('Sign Up'),
                     width: double.infinity,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
