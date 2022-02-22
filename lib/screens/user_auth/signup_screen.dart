@@ -65,7 +65,15 @@ class _SignupScreenState extends State<SignupScreen> {
       )
           .then((user) async {
         if (user.runtimeType == User) {
-          print('worked');
+        } else if (user.runtimeType == String) {
+          // If an error occurs, we show a snack bar.
+          showSnackBar(
+            context: context,
+            content: 'Something went wrong.',
+            label: 'Dismiss',
+            backgroundColor: secondaryColor,
+            textColor: primaryColor,
+          );
         }
       });
     }
