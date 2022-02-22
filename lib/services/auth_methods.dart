@@ -15,8 +15,8 @@ class AuthMethods {
   // Methods for uploading data to Firebase Storage.
   final StorageMethods _storageMethods = StorageMethods();
 
-  // Function for creating a new user account.
-  Future<Object> signUpWithEmailAndPassword({
+  // Function for creating a new user account with email and password.
+  Future<Object> signUpWithEmail({
     required String username,
     required String email,
     required String password,
@@ -54,6 +54,24 @@ class AuthMethods {
         'following': [],
         'profilePictureUrl': photoUrl,
       });
+      return user;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  // Function for logging in a user with email and password.
+  Future<Object> loginWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User user = credential.user!;
       return user;
     } catch (e) {
       print(e.toString());

@@ -28,7 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
-  // Helper for creating a new user and adding information to database.
+  // Methods for authenticating users on Firebase.
   final _authMethods = AuthMethods();
 
   // User's profile picture, to be updated when the user selects a picture.
@@ -63,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       // Sign up user and upload information to database.
       _authMethods
-          .signUpWithEmailAndPassword(
+          .signUpWithEmail(
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -76,6 +76,7 @@ class _SignupScreenState extends State<SignupScreen> {
           _isLoading = false;
         });
         if (user.runtimeType == User) {
+          print('Successfully signed up user!');
         } else if (user.runtimeType == String) {
           // If an error occurs, we show a snack bar.
           showSnackBar(

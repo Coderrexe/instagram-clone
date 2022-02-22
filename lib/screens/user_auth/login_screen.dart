@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:instagram_clone/services/auth_methods.dart';
+import 'package:instagram_clone/services/utils.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/text_field_input.dart';
 
@@ -20,11 +23,51 @@ class _LoginScreenState extends State<LoginScreen> {
   // validation of the form.
   final _formKey = GlobalKey<FormState>();
 
+  // Methods for authenticating users on Firebase.
+  final _authMethods = AuthMethods();
+
+  // Whether or not to show loading animation.
+  bool _isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  void loginUserWithEmail() {
+    // Show loading animation.
+    setState(() {
+      _isLoading = true;
+    });
+    // Check if user information are acceptable (e.g. email address is valid).
+    if (_formKey.currentState!.validate()) {
+      // Login user.
+      _authMethods
+          .loginWithEmail(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      )
+          .then((user) async {
+        // Stop loading animation.
+        setState(() {
+          _isLoading = false;
+        });
+        if (user.runtimeType == User) {
+          print('Successfully logged in user!');
+        } else if (user.runtimeType == String) {
+          // If an error occurs, we show a snack bar.
+          showSnackBar(
+            context: context,
+            content: 'Something went wrong.',
+            label: 'Dismiss',
+            backgroundColor: secondaryColor,
+            textColor: primaryColor,
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -103,11 +146,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 // Login button.
                 InkWell(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {}
-                  },
+                  onTap: loginUserWithEmail,
                   child: Container(
-                    child: const Text('Log In'),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          )
+                        : const Text('Log In'),
                     width: double.infinity,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 12.0),

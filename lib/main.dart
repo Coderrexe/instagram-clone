@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
 // import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
 // import 'package:instagram_clone/responsive/web_screen_layout.dart';
-import 'package:instagram_clone/screens/user_auth/signup_screen.dart';
+import 'package:instagram_clone/screens/user_auth/login_screen.dart';
 // App theme colors, to be reused within the codebase.
 import 'package:instagram_clone/theme.dart';
 
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
       //   mobileScreenLayout: MobileScreenLayout(),
       //   webScreenLayout: WebScreenLayout(),
       // ),
-      home: const SignupScreen(),
+      home: const LoginScreen(),
     );
   }
 }
