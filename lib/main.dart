@@ -49,36 +49,35 @@ class InstagramClone extends StatelessWidget {
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
       // StreamBuilder rebuilds app every time there is a new event from stream.
-      // home: StreamBuilder(
-      //   // authStateChanges notifies about changes to the user's sign-in state.
-      //   stream: FirebaseAuth.instance.authStateChanges(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.active) {
-      //       // snapshot.hasData is whether the user has been authenticated.
-      //       if (snapshot.hasData) {
-      //         return const ResponsiveLayout(
-      //           webScreenLayout: WebScreenLayout(),
-      //           mobileScreenLayout: MobileScreenLayout(),
-      //         );
-      //       } else if (snapshot.hasError) {
-      //         return Center(
-      //           child: Text('${snapshot.error}'),
-      //         );
-      //       }
-      //     }
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return const Center(
-      //         child: CircularProgressIndicator(
-      //           color: primaryColor,
-      //         ),
-      //       );
-      //     }
-      //     // If user has not been authenticated, we redirect to the log in
-      //     // screen.
-      //     return const LoginScreen();
-      //   },
-      // ),
-      home: LoginScreen(),
+      home: StreamBuilder(
+        // authStateChanges notifies about changes to the user's sign-in state.
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            // snapshot.hasData is whether the user has been authenticated.
+            if (snapshot.hasData) {
+              return const ResponsiveLayout(
+                webScreenLayout: WebScreenLayout(),
+                mobileScreenLayout: MobileScreenLayout(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('${snapshot.error}'),
+              );
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          // If user has not been authenticated, we redirect to the log in
+          // screen.
+          return const LoginScreen();
+        },
+      ),
     );
   }
 }

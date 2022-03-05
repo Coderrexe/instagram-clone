@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
+import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
+import 'package:instagram_clone/responsive/web_screen_layout.dart';
 import 'package:instagram_clone/services/auth_methods.dart';
 import 'package:instagram_clone/services/utils.dart';
 import 'package:instagram_clone/theme.dart';
@@ -56,6 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
         if (user.runtimeType == User) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const ResponsiveLayout(
+                webScreenLayout: WebScreenLayout(),
+                mobileScreenLayout: MobileScreenLayout(),
+              ),
+            ),
+          );
         } else if (user.runtimeType == String) {
           // If an error occurs, we show a snack bar.
           showSnackBar(
