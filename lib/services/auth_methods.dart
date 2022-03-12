@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/services/storage_methods.dart';
 
 // Methods for authenticating users on Firebase.
@@ -45,15 +47,19 @@ class AuthMethods {
       }
 
       // Add user to our database.
-      _firestore.collection('users').doc(credential.user!.uid).set({
-        'uid': credential.user!.uid,
-        'username': username,
-        'email': email,
-        'bio': bio,
-        'followers': [],
-        'following': [],
-        'profilePictureUrl': photoUrl,
-      });
+      AppUser appUser = AppUser(
+        username: username,
+        uid: credential.user!.uid,
+        email: email,
+        bio: bio,
+        photoUrl: photoUrl,
+        followers: [],
+        following: [],
+      );
+      _firestore
+          .collection('users')
+          .doc(credential.user!.uid)
+          .set(appUser.toJson());
       return user;
     } catch (e) {
       print(e.toString());
