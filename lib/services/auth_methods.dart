@@ -17,6 +17,16 @@ class AuthMethods {
   // Methods for uploading data to Firebase Storage.
   final StorageMethods _storageMethods = StorageMethods();
 
+  // Function for retrieving user information of the current user.
+  Future<AppUser> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+    // User data represented in a snapshot.
+    DocumentSnapshot snapshot =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+    // Return an instance of AppUser model with user data.
+    return AppUser.fromSnapshot(snapshot);
+  }
+
   // Function for creating a new user account with email and password.
   Future<Object> signUpWithEmail({
     required String username,
@@ -52,7 +62,7 @@ class AuthMethods {
         uid: credential.user!.uid,
         email: email,
         bio: bio,
-        photoUrl: photoUrl,
+        profilePictureUrl: photoUrl,
         followers: [],
         following: [],
       );
