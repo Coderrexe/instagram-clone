@@ -23,10 +23,11 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
     super.initState();
-    addData();
+    refreshUser();
   }
 
-  void addData() async {
+  // Function for saving the current user information to provider.
+  void refreshUser() async {
     // We only need to call refreshUser once, when the user logs in, so we set
     // the parameter `listen` to false.
     UserProvider _userProvider = Provider.of(context, listen: false);

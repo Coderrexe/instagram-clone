@@ -5,7 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 // Methods for uploading data to Firebase Storage.
 class StorageMethods {
+  // Entry point to the Firebase Storage SDK.
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // Entry point to the Firebase Authentication SDK.
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Add image to Firebase storage.

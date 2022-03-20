@@ -163,13 +163,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       InkWell(
                         onTap: loginUserWithEmail,
                         child: Container(
-                          child: _isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: primaryColor,
-                                  ),
-                                )
-                              : const Text('Log In'),
                           width: double.infinity,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -180,6 +173,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             color: blueColor,
                           ),
+                          child: _isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: primaryColor,
+                                  ),
+                                )
+                              : const Text('Log In'),
                         ),
                       ),
                       const SizedBox(height: 12.0),
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         flex: 1,
                         child: Container(),
                       ),
-                      // Transitioning to sign up screen.
+                      // Switching to sign up screen.
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

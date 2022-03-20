@@ -238,13 +238,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       InkWell(
                         onTap: signUpUserWithEmail,
                         child: Container(
-                          child: _isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: primaryColor,
-                                  ),
-                                )
-                              : const Text('Sign Up'),
                           width: double.infinity,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -255,6 +248,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             color: blueColor,
                           ),
+                          child: _isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: primaryColor,
+                                  ),
+                                )
+                              : const Text('Sign Up'),
                         ),
                       ),
                       const SizedBox(height: 12.0),
