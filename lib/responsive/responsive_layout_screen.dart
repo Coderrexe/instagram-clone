@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// File containing widths of screens, used for creating responsive design.
-import 'package:instagram_clone/dimensions.dart';
+import 'package:instagram_clone/global_variables.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
 
 class ResponsiveLayout extends StatefulWidget {
