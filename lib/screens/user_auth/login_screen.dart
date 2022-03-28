@@ -93,139 +93,137 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        body: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: SafeArea(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                    width: double.infinity, // full width of the device
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(),
-                        ),
-                        // SVG Instagram logo.
-                        SvgPicture.asset(
-                          'assets/instagram_icon.svg',
-                          color: primaryColor,
-                          height: 64.0,
-                        ),
-                        const SizedBox(height: 64.0),
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              // Text input field for email.
-                              TextFieldInput(
-                                textEditingController: _emailController,
-                                hintText: 'Enter your email',
-                                textInputType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+"
-                                    r"@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                                  ).hasMatch(value!)) {
-                                    return null;
-                                  } else if (value.trim().isEmpty) {
-                                    return 'Please enter an email';
-                                  } else {
-                                    return 'This is not a valid email';
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 24.0),
-                              // Text input field for password.
-                              TextFieldInput(
-                                textEditingController: _passwordController,
-                                isPassword: true,
-                                hintText: 'Enter your password',
-                                textInputType: TextInputType.text,
-                                validator: (value) {
-                                  if (value!.contains(' ')) {
-                                    return 'Password must not contain spaces';
-                                  } else if (value.length < 6) {
-                                    return 'Password must be longer than 6 '
-                                        'characters';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 24.0),
-                            ],
-                          ),
-                        ),
-                        // Login button.
-                        InkWell(
-                          onTap: loginUserWithEmail,
-                          child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            decoration: const ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4.0)),
-                              ),
-                              color: blueColor,
-                            ),
-                            child: _isLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator(
-                                      color: primaryColor,
-                                    ),
-                                  )
-                                : const Text('Log In'),
-                          ),
-                        ),
-                        const SizedBox(height: 12.0),
-                        Flexible(
-                          flex: 1,
-                          child: Container(),
-                        ),
-                        // Switching to sign up screen.
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+        body: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                  width: double.infinity, // full width of the device
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Container(),
+                      ),
+                      // SVG Instagram logo.
+                      SvgPicture.asset(
+                        'assets/instagram_icon.svg',
+                        color: primaryColor,
+                        height: 64.0,
+                      ),
+                      const SizedBox(height: 64.0),
+                      Form(
+                        key: _formKey,
+                        child: Column(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: const Text("Don't have an account?"),
-                            ),
-                            const SizedBox(width: 4.0),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignupScreen(),
-                                  ),
-                                );
+                            // Text input field for email.
+                            TextFieldInput(
+                              textEditingController: _emailController,
+                              hintText: 'Enter your email',
+                              textInputType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (RegExp(
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+"
+                                  r"@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                                ).hasMatch(value!)) {
+                                  return null;
+                                } else if (value.trim().isEmpty) {
+                                  return 'Please enter an email';
+                                } else {
+                                  return 'This is not a valid email';
+                                }
                               },
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: const Text(
-                                  'Sign Up',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: blueColor,
+                            ),
+                            const SizedBox(height: 24.0),
+                            // Text input field for password.
+                            TextFieldInput(
+                              textEditingController: _passwordController,
+                              isPassword: true,
+                              hintText: 'Enter your password',
+                              textInputType: TextInputType.text,
+                              validator: (value) {
+                                if (value!.contains(' ')) {
+                                  return 'Password must not contain spaces';
+                                } else if (value.length < 6) {
+                                  return 'Password must be longer than 6 '
+                                      'characters';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 24.0),
+                          ],
+                        ),
+                      ),
+                      // Login button.
+                      InkWell(
+                        onTap: loginUserWithEmail,
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          decoration: const ShapeDecoration(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0)),
+                            ),
+                            color: blueColor,
+                          ),
+                          child: _isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: primaryColor,
                                   ),
+                                )
+                              : const Text('Log In'),
+                        ),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Flexible(
+                        flex: 1,
+                        child: Container(),
+                      ),
+                      // Switching to sign up screen.
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: const Text("Don't have an account?"),
+                          ),
+                          const SizedBox(width: 4.0),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: const Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: blueColor,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
