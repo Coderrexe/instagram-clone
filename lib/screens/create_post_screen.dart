@@ -101,6 +101,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           content: 'Posted successfully!',
           label: 'Dismiss',
         );
+        setState(() {
+          _file = null;
+          _isLoading = false;
+        });
       } else if (value.runtimeType == String) {
         showSnackBar(
           context: context,
