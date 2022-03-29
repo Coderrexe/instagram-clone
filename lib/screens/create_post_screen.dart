@@ -22,6 +22,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   // The user's selected photo to be posted.
   Uint8List? _file;
 
+  // Whether to show loading animation for this page.
+  bool _isLoading = false;
+
   // TextEditingController class helps us handle changes to a text field.
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -79,7 +82,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     String username,
     String profilePicture,
   ) async {
-      await FirestoreMethods()
+    // Start loading animation.
+    setState(() {
+      _isLoading = true;
+    });
+    await FirestoreMethods()
         .uploadPost(
       uid,
       _descriptionController.text,
@@ -145,6 +152,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading ? const LinearProgressIndicator() : Container(),
+                const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
