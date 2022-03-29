@@ -20,7 +20,7 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   // The user's selected photo to be posted.
-  Uint8List? _file;
+  Uint8List? _post;
 
   // Whether to show loading animation for this page.
   bool _isLoading = false;
@@ -48,7 +48,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Navigator.of(context).pop();
                 Uint8List? file = await pickImage(ImageSource.camera);
                 setState(() {
-                  _file = file;
+                  _post = file;
                 });
               },
               child: const Text('Take a photo'),
@@ -59,7 +59,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Navigator.of(context).pop();
                 Uint8List? file = await pickImage(ImageSource.gallery);
                 setState(() {
-                  _file = file;
+                  _post = file;
                 });
               },
               child: const Text('Choose from gallery'),
@@ -90,7 +90,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         .uploadPost(
       uid,
       _descriptionController.text,
-      _file!,
+      _post!,
       username,
       profilePicture,
     )
@@ -102,7 +102,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           label: 'Dismiss',
         );
         setState(() {
-          _file = null;
+          _post = null;
           _isLoading = false;
         });
       } else if (value.runtimeType == String) {
@@ -120,7 +120,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     // Get the information of the current logged-in user.
     final AppUser user = Provider.of<UserProvider>(context).getUser;
 
-    return _file == null
+    return _post == null
         ? Center(
             child: IconButton(
               onPressed: () => _selectImage(context),
@@ -131,7 +131,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    _post = null;
+                  });
+                },
                 icon: const Icon(Icons.arrow_back),
               ),
               title: const Text('Create post'),
@@ -184,7 +188,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: MemoryImage(_file!),
+                              image: MemoryImage(_post!),
                               fit: BoxFit.fill,
                               alignment: FractionalOffset.topCenter,
                             ),
