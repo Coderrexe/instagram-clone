@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'package:instagram_clone/models/post.dart';
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/services/firestore_methods.dart';
 import 'package:instagram_clone/services/utils.dart';
 import 'package:instagram_clone/theme.dart';
 
@@ -22,6 +24,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   // TextEditingController class helps us handle changes to a text field.
   final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _descriptionController.dispose();
+  }
 
   // Show a pop-up menu for the user to choose how to upload post.
   void _selectImage(BuildContext context) async {
@@ -66,6 +74,36 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
+  void postImage(
+    String uid,
+    String username,
+    String profilePicture,
+  ) async {
+      await FirestoreMethods()
+        .uploadPost(
+      uid,
+      _descriptionController.text,
+      _file!,
+      username,
+      profilePicture,
+    )
+        .then((value) {
+      if (value.runtimeType == Post) {
+        showSnackBar(
+          context: context,
+          content: 'Posted successfully!',
+          label: 'Dismiss',
+        );
+      } else if (value.runtimeType == String) {
+        showSnackBar(
+          context: context,
+          content: 'Something went wrong!',
+          label: 'Dismiss',
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get the information of the current logged-in user.
@@ -89,7 +127,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => postImage(
+                    user.uid,
+                    user.username,
+                    user.profilePictureUrl,
+                  ),
                   child: const Text(
                     'Post',
                     style: TextStyle(
