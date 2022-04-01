@@ -15,18 +15,20 @@ class PostCard extends StatelessWidget {
       child: Column(
         children: [
           // Header: shows user profile picture, username, and 3-dots icon.
-          Container(
+          Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 4.0,
               horizontal: 16.0,
             ).copyWith(right: 0.0),
             child: Row(
               children: [
+                // User profile picture.
                 const CircleAvatar(
                   radius: 16.0,
                   backgroundImage: NetworkImage(
                       'https://images.unsplash.com/photo-1648737155328-0c0012cf2f20?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'),
                 ),
+                // Username text.
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
@@ -44,6 +46,7 @@ class PostCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                // 3-dots icon to show options.
                 IconButton(
                   onPressed: () {
                     // Pop-up dialog when user clicks the 3-dots icon on post,
@@ -89,7 +92,7 @@ class PostCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Show like and comment buttons.
+          // Show like, comment and other IconButtons.
           Row(
             children: [
               IconButton(
