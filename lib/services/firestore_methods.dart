@@ -31,7 +31,7 @@ class FirestoreMethods {
         postUrl: postUrl,
         profilePicture: profilePicture,
       );
-      _firestore.collection('posts').doc('postId').set(post.toJson());
+      _firestore.collection('posts').doc(postId).set(post.toJson());
       return post;
     } catch (e) {
       print(e);
