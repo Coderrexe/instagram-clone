@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:instagram_clone/theme.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({Key? key}) : super(key: key);
+  const PostCard({
+    Key? key,
+    required this.postInfo,
+  }) : super(key: key);
+
+  // Post information stored in a map.
+  final Map<String, dynamic> postInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +30,9 @@ class PostCard extends StatelessWidget {
             child: Row(
               children: [
                 // User profile picture.
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 16.0,
-                  backgroundImage: NetworkImage(
-                      'https://images.unsplash.com/photo-1648737155328-0c0012cf2f20?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'),
+                  backgroundImage: NetworkImage(postInfo['profilePicture']),
                 ),
                 // Username text.
                 Expanded(
@@ -35,10 +41,10 @@ class PostCard extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'Username',
-                          style: TextStyle(
+                          postInfo['username'],
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -88,7 +94,7 @@ class PostCard extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.35,
             width: double.infinity,
             child: Image.network(
-              'https://images.unsplash.com/photo-1648737155328-0c0012cf2f20?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+              postInfo['postUrl'],
               fit: BoxFit.cover,
             ),
           ),
@@ -131,45 +137,51 @@ class PostCard extends StatelessWidget {
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    '6969 likes',
+                    '${postInfo['likes'].length} likes',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: RichText(
-                    text: const TextSpan(
-                      style: TextStyle(color: primaryColor),
-                      children: [
-                        TextSpan(
-                          text: 'username',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                postInfo['description'] != ''
+                    ? Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: RichText(
+                          text: TextSpan(
+                            style: const TextStyle(color: primaryColor),
+                            children: [
+                              TextSpan(
+                                text: postInfo['username'],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: ' ${postInfo['description']}',
+                              ),
+                            ],
+                          ),
                         ),
-                        TextSpan(
-                          text: ' This is some description, to be replaced.',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                      )
+                    : Container(),
                 InkWell(
                   onTap: () {},
                   child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 7.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      'View all 420 comments',
+                      'View all 69 comments',
                       style: TextStyle(
                         color: secondaryColor,
                       ),
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3.0),
                   child: Text(
-                    '2 days ago',
-                    style: TextStyle(
+                    // Convert Timestamp object to human-readable date.
+                    DateFormat.yMMMd().format(
+                      postInfo['datePublished'].toDate(),
+                    ),
+                    style: const TextStyle(
                       fontSize: 12,
                       color: secondaryColor,
                     ),

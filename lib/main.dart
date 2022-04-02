@@ -58,6 +58,8 @@ class InstagramClone extends StatelessWidget {
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
         // StreamBuilder rebuilds app every time there is a new event from stream.
+        // In this case, we want the app to refresh every time the user's
+        // authentication state changes, e.g. log in, log out.
         home: StreamBuilder(
           // authStateChanges notifies about changes to the user's sign-in state.
           stream: FirebaseAuth.instance.authStateChanges(),

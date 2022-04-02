@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -27,7 +28,30 @@ class FeedScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const PostCard(),
+      // StreamBuilder rebuilds app every time there is a new event from stream.
+      // In this case, we want the app to update the feed page every time a new
+      // post is posted.
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context, snapshot) {
+          // Show loading animation if posts are still loading.
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          // Once all the posts are loaded in, display them.
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) => PostCard(
+              postInfo:
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>,
+            ),
+          );
+        },
+      ),
     );
   }
 }
