@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import 'package:instagram_clone/models/user.dart';
+import 'package:instagram_clone/providers/user_provider.dart';
 import 'package:instagram_clone/theme.dart';
+import 'package:instagram_clone/widgets/like_animation.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   const PostCard({
     Key? key,
     required this.postInfo,
@@ -13,7 +18,17 @@ class PostCard extends StatelessWidget {
   final Map<String, dynamic> postInfo;
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  // Whether like animation is currently showing.
+  bool isLikeAnimating = false;
+
+  @override
   Widget build(BuildContext context) {
+    final AppUser user = Provider.of<UserProvider>(context).getUser;
+
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(
@@ -32,7 +47,8 @@ class PostCard extends StatelessWidget {
                 // User profile picture.
                 CircleAvatar(
                   radius: 16.0,
-                  backgroundImage: NetworkImage(postInfo['profilePicture']),
+                  backgroundImage:
+                      NetworkImage(widget.postInfo['profilePicture']),
                 ),
                 // Username text.
                 Expanded(
@@ -43,7 +59,7 @@ class PostCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          postInfo['username'],
+                          widget.postInfo['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -90,20 +106,54 @@ class PostCard extends StatelessWidget {
             ),
           ),
           // Show image of the post.
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: double.infinity,
-            child: Image.network(
-              postInfo['postUrl'],
-              fit: BoxFit.cover,
+          GestureDetector(
+            onDoubleTap: () {
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.postInfo['postUrl'],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: isLikeAnimating ? 1 : 0,
+                  child: LikeAnimation(
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 120,
+                    ),
+                    isAnimating: isLikeAnimating,
+                    duration: const Duration(milliseconds: 400),
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           // Show like, comment and other IconButtons.
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite_outline),
+              LikeAnimation(
+                isAnimating: widget.postInfo['likes'].contains(user.uid),
+                likeButtonHasBeenClicked: true,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite_outline),
+                ),
               ),
               IconButton(
                 onPressed: () {},
@@ -137,11 +187,11 @@ class PostCard extends StatelessWidget {
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    '${postInfo['likes'].length} likes',
+                    '${widget.postInfo['likes'].length} likes',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
-                postInfo['description'] != ''
+                widget.postInfo['description'] != ''
                     ? Container(
                         width: double.infinity,
                         padding: const EdgeInsets.only(top: 8.0),
@@ -150,12 +200,12 @@ class PostCard extends StatelessWidget {
                             style: const TextStyle(color: primaryColor),
                             children: [
                               TextSpan(
-                                text: postInfo['username'],
+                                text: widget.postInfo['username'],
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               TextSpan(
-                                text: ' ${postInfo['description']}',
+                                text: ' ${widget.postInfo['description']}',
                               ),
                             ],
                           ),
@@ -179,7 +229,7 @@ class PostCard extends StatelessWidget {
                   child: Text(
                     // Convert Timestamp object to human-readable date.
                     DateFormat.yMMMd().format(
-                      postInfo['datePublished'].toDate(),
+                      widget.postInfo['datePublished'].toDate(),
                     ),
                     style: const TextStyle(
                       fontSize: 12,
