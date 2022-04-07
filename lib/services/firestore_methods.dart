@@ -13,6 +13,7 @@ class FirestoreMethods {
   // Methods for uploading data to Firebase Storage.
   final StorageMethods _storageMethods = StorageMethods();
 
+  // Method for uploading a post to the Firebase Firestore database.
   Future<Object> uploadPost(String uid, String description, Uint8List file,
       String username, String profilePicture) async {
     try {
@@ -36,6 +37,26 @@ class FirestoreMethods {
     } catch (e) {
       print(e);
       return e.toString();
+    }
+  }
+
+  // Method for updating likes of a post to Firebase Firestore.
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        // If user has already liked the post before, we remove the like from
+        // database.
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        // If user has not already liked the post, we add the like to database.
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/services/firestore_methods.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 
@@ -107,6 +108,12 @@ class _PostCardState extends State<PostCard> {
           // Show image of the post.
           GestureDetector(
             onDoubleTap: () {
+              // Save the like to Firebase Firestore database.
+              FirestoreMethods().likePost(
+                widget.postInfo['postId'],
+                user.uid,
+                widget.postInfo['likes'],
+              );
               // Start the like animation when a user double-clicks on a post.
               setState(() {
                 shouldLikeAnimate = true;
@@ -151,8 +158,20 @@ class _PostCardState extends State<PostCard> {
                 shouldAnimate: widget.postInfo['likes'].contains(user.uid),
                 likeButtonHasBeenClicked: true,
                 child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_outline),
+                  onPressed: () {
+                    // Save the like to Firebase Firestore database.
+                    FirestoreMethods().likePost(
+                      widget.postInfo['postId'],
+                      user.uid,
+                      widget.postInfo['likes'],
+                    );
+                  },
+                  icon: widget.postInfo['likes'].contains(user.uid)
+                      ? const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                      : const Icon(Icons.favorite_outline),
                 ),
               ),
               IconButton(
