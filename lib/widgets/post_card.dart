@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +21,8 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  // Whether like animation is currently showing.
-  bool isLikeAnimating = false;
+  // Whether the like animation should show.
+  bool shouldLikeAnimate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +107,9 @@ class _PostCardState extends State<PostCard> {
           // Show image of the post.
           GestureDetector(
             onDoubleTap: () {
+              // Start the like animation when a user double-clicks on a post.
               setState(() {
-                isLikeAnimating = true;
+                shouldLikeAnimate = true;
               });
             },
             child: Stack(
@@ -125,18 +125,18 @@ class _PostCardState extends State<PostCard> {
                 ),
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
-                  opacity: isLikeAnimating ? 1 : 0,
+                  opacity: shouldLikeAnimate ? 1 : 0,
                   child: LikeAnimation(
                     child: const Icon(
                       Icons.favorite,
                       color: Colors.white,
                       size: 120,
                     ),
-                    isAnimating: isLikeAnimating,
+                    shouldAnimate: shouldLikeAnimate,
                     duration: const Duration(milliseconds: 400),
                     onEnd: () {
                       setState(() {
-                        isLikeAnimating = false;
+                        shouldLikeAnimate = false;
                       });
                     },
                   ),
@@ -148,7 +148,7 @@ class _PostCardState extends State<PostCard> {
           Row(
             children: [
               LikeAnimation(
-                isAnimating: widget.postInfo['likes'].contains(user.uid),
+                shouldAnimate: widget.postInfo['likes'].contains(user.uid),
                 likeButtonHasBeenClicked: true,
                 child: IconButton(
                   onPressed: () {},

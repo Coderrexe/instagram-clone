@@ -5,17 +5,17 @@ class LikeAnimation extends StatefulWidget {
   const LikeAnimation({
     Key? key,
     required this.child,
-    required this.isAnimating,
+    required this.shouldAnimate,
     this.duration = const Duration(milliseconds: 150),
     this.onEnd,
     this.likeButtonHasBeenClicked = false,
   }) : super(key: key);
 
-  // The widget present at the end of the animation.
+  // The widget to be transformed in the animation.
   final Widget child;
 
-  // Whether the animation is occurring.
-  final bool isAnimating;
+  // Whether the animation should be occurring.
+  final bool shouldAnimate;
 
   // How long should the animation last.
   final Duration duration;
@@ -23,7 +23,9 @@ class LikeAnimation extends StatefulWidget {
   // Function to be called at the end of the animation.
   final VoidCallback? onEnd;
 
-  // Whether the like button has already been clicked.
+  // Whether the like button has been clicked; we need to start the like
+  // animation either when the user double-clicks on a post, or when he clicks
+  // the like button.
   final bool likeButtonHasBeenClicked;
 
   @override
@@ -44,9 +46,12 @@ class _LikeAnimationState extends State<LikeAnimation>
   @override
   void initState() {
     super.initState();
+
     controller = AnimationController(
       vsync: this,
       duration: Duration(
+        // Animation increases the heart icon's size then decreases it, so each
+        // way accounts for half the whole duration of the animation.
         milliseconds: widget.duration.inMilliseconds ~/ 2,
       ),
     );
@@ -59,22 +64,28 @@ class _LikeAnimationState extends State<LikeAnimation>
     controller.dispose();
   }
 
-  // Called whenever the current widget is replaced by another widget (i.e.
-  // when the animation ends).
+  // Called whenever the widget configuration changes. In this case, when the
+  // ScaleTransition class is called in the build method, we need to start the
+  // animation through this method.
   @override
   void didUpdateWidget(covariant LikeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.isAnimating != oldWidget.isAnimating) {
+    if (widget.shouldAnimate != oldWidget.shouldAnimate) {
       startAnimation();
     }
   }
 
-  startAnimation() async {
-    // If the widget is still animating,
-    if (widget.isAnimating || widget.likeButtonHasBeenClicked) {
+  void startAnimation() async {
+    // If the widget should start animating.
+    if (widget.shouldAnimate || widget.likeButtonHasBeenClicked) {
+      // The animation should increase the size of the white heart icon, then
+      // decrease it.
+      // Increase size of white heart icon.
       await controller.forward();
+      // Decrease size of white heart icon.
       await controller.reverse();
+      // Wait for a bit before the heart icon disappears.
       await Future.delayed(const Duration(milliseconds: 200));
 
       // If there is a function that needs to be called at the end of animation,
