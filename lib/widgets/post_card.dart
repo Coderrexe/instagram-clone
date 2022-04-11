@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/screens/comments_screen.dart';
 import 'package:instagram_clone/services/firestore_methods.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
@@ -175,7 +176,11 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CommentsScreen(),
+                  ),
+                ),
                 icon: const Icon(Icons.comment_outlined),
               ),
               IconButton(
