@@ -23,7 +23,14 @@ class FeedScreen extends StatelessWidget {
         centerTitle: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const SignupScreen(),
+                ),
+              );
+            },
             icon: const Icon(
               Icons.messenger_outline,
             ),
