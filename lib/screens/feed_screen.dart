@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:instagram_clone/screens/user_auth/signup_screen.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/post_card.dart';
 
@@ -46,7 +48,7 @@ class FeedScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) => PostCard(
-              postInfo:
+              postData:
                   snapshot.data!.docs[index].data() as Map<String, dynamic>,
             ),
           );

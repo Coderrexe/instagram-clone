@@ -53,5 +53,7 @@
     <string>To take photos or videos from your device.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>To talk from your device.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

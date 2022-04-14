@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:instagram_clone/models/comment.dart';
 import 'package:instagram_clone/models/post.dart';
 import 'package:instagram_clone/services/storage_methods.dart';
 
@@ -15,7 +16,7 @@ class FirestoreMethods {
 
   // Method for uploading a post to the Firebase Firestore database.
   Future<Object> uploadPost(String uid, String description, Uint8List file,
-      String username, String profilePicture) async {
+      String username, String profilePictureUrl) async {
     try {
       String postUrl =
           await _storageMethods.uploadImageToStorage('posts', file, true);
@@ -30,7 +31,7 @@ class FirestoreMethods {
         likes: [],
         datePublished: DateTime.now(),
         postUrl: postUrl,
-        profilePicture: profilePicture,
+        profilePictureUrl: profilePictureUrl,
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       return post;
@@ -57,6 +58,37 @@ class FirestoreMethods {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  // Method for uploading a comment to the Firebase Firestore database.
+  Future<void> postComment(
+    String postId,
+    String uid,
+    String text,
+    String username,
+    String profilePictureUrl,
+  ) async {
+    try {
+      // Generate a time-based version 1 UUID, to use as ID for the comment.
+      String commentId = const Uuid().v1();
+      Comment comment = Comment(
+        uid: uid,
+        commentId: commentId,
+        text: text,
+        username: username,
+        likes: [],
+        datePublished: DateTime.now(),
+        profilePictureUrl: profilePictureUrl,
+      );
+      await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .set(comment.toJson());
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

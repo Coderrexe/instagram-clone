@@ -12,11 +12,11 @@ import 'package:instagram_clone/widgets/like_animation.dart';
 class PostCard extends StatefulWidget {
   const PostCard({
     Key? key,
-    required this.postInfo,
+    required this.postData,
   }) : super(key: key);
 
   // Post information stored in a map.
-  final Map<String, dynamic> postInfo;
+  final Map<String, dynamic> postData;
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -49,7 +49,7 @@ class _PostCardState extends State<PostCard> {
                 CircleAvatar(
                   radius: 16.0,
                   backgroundImage:
-                      NetworkImage(widget.postInfo['profilePicture']),
+                      NetworkImage(widget.postData['profilePicture']),
                 ),
                 // Username text.
                 Expanded(
@@ -60,7 +60,7 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.postInfo['username'],
+                          widget.postData['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -111,9 +111,9 @@ class _PostCardState extends State<PostCard> {
             onDoubleTap: () {
               // Save the like to Firebase Firestore database.
               FirestoreMethods().likePost(
-                widget.postInfo['postId'],
+                widget.postData['postId'],
                 user.uid,
-                widget.postInfo['likes'],
+                widget.postData['likes'],
               );
               // Start the like animation when a user double-clicks on a post.
               setState(() {
@@ -127,7 +127,7 @@ class _PostCardState extends State<PostCard> {
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: double.infinity,
                   child: Image.network(
-                    widget.postInfo['postUrl'],
+                    widget.postData['postUrl'],
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -156,18 +156,18 @@ class _PostCardState extends State<PostCard> {
           Row(
             children: [
               LikeAnimation(
-                shouldAnimate: widget.postInfo['likes'].contains(user.uid),
+                shouldAnimate: widget.postData['likes'].contains(user.uid),
                 likeButtonHasBeenClicked: true,
                 child: IconButton(
                   onPressed: () {
                     // Save the like to Firebase Firestore database.
                     FirestoreMethods().likePost(
-                      widget.postInfo['postId'],
+                      widget.postData['postId'],
                       user.uid,
-                      widget.postInfo['likes'],
+                      widget.postData['likes'],
                     );
                   },
-                  icon: widget.postInfo['likes'].contains(user.uid)
+                  icon: widget.postData['likes'].contains(user.uid)
                       ? const Icon(
                           Icons.favorite,
                           color: Colors.red,
@@ -178,7 +178,9 @@ class _PostCardState extends State<PostCard> {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CommentsScreen(),
+                    builder: (context) => CommentsScreen(
+                      postData: widget.postData,
+                    ),
                   ),
                 ),
                 icon: const Icon(Icons.comment_outlined),
@@ -211,11 +213,11 @@ class _PostCardState extends State<PostCard> {
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    '${widget.postInfo['likes'].length} likes',
+                    '${widget.postData['likes'].length} likes',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
-                widget.postInfo['description'] != ''
+                widget.postData['description'] != ''
                     ? Container(
                         width: double.infinity,
                         padding: const EdgeInsets.only(top: 8.0),
@@ -224,12 +226,12 @@ class _PostCardState extends State<PostCard> {
                             style: const TextStyle(color: primaryColor),
                             children: [
                               TextSpan(
-                                text: widget.postInfo['username'],
+                                text: widget.postData['username'],
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               TextSpan(
-                                text: ' ${widget.postInfo['description']}',
+                                text: ' ${widget.postData['description']}',
                               ),
                             ],
                           ),
@@ -253,7 +255,7 @@ class _PostCardState extends State<PostCard> {
                   child: Text(
                     // Convert Timestamp object to human-readable date.
                     DateFormat.yMMMd().format(
-                      widget.postInfo['datePublished'].toDate(),
+                      widget.postData['datePublished'].toDate(),
                     ),
                     style: const TextStyle(
                       fontSize: 12,

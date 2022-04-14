@@ -1,52 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Model of a post, to be reused within the codebase.
-class Post {
-  const Post({
+// Model of a comment, to be reused within the codebase.
+class Comment {
+  const Comment({
     required this.uid,
-    required this.postId,
-    required this.description,
+    required this.commentId,
+    required this.text,
     required this.username,
     required this.likes,
     required this.datePublished,
-    required this.postUrl,
     required this.profilePictureUrl,
   });
 
   final String uid;
-  final String postId;
-  final String description;
+  final String commentId;
+  final String text;
   final String username;
   final List likes;
   final DateTime datePublished;
-  final String postUrl;
   final String profilePictureUrl;
 
   // Function for converting Post model to JSON information, to be stored
   // in Firebase database.
   Map<String, dynamic> toJson() => {
-        'uid': uid,
-        'postId': postId,
-        'description': description,
-        'username': username,
-        'likes': likes,
-        'datePublished': datePublished,
-        'postUrl': postUrl,
-        'profilePicture': profilePictureUrl,
-      };
+    'uid': uid,
+    'postId': commentId,
+    'text': text,
+    'username': username,
+    'likes': likes,
+    'datePublished': datePublished,
+    'profilePictureUrl': profilePictureUrl,
+  };
 
   // Function for converting post information in DocumentSnapshot to Post model.
-  static Post fromSnapshot(DocumentSnapshot snapshot) {
+  static Comment fromSnapshot(DocumentSnapshot snapshot) {
     var snapshotData = snapshot.data() as Map<String, dynamic>;
-    return Post(
+    return Comment(
       uid: snapshotData['uid'],
-      postId: snapshotData['postId'],
-      description: snapshotData['description'],
+      commentId: snapshotData['commentId'],
+      text: snapshotData['text'],
       username: snapshotData['username'],
       likes: snapshotData['likes'],
       datePublished: snapshotData['datePublished'],
-      postUrl: snapshotData['postUrl'],
-      profilePictureUrl: snapshotData['profilePicture'],
+      profilePictureUrl: snapshotData['profilePictureUrl'],
     );
   }
 }

@@ -1,25 +1,73 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:instagram_clone/models/user.dart';
+import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/services/firestore_methods.dart';
 import 'package:instagram_clone/theme.dart';
 import 'package:instagram_clone/widgets/comment_card.dart';
 
 class CommentsScreen extends StatefulWidget {
-  const CommentsScreen({Key? key}) : super(key: key);
+  const CommentsScreen({
+    Key? key,
+    required this.postData,
+  }) : super(key: key);
+
+  final Map<String, dynamic> postData;
 
   @override
   State<CommentsScreen> createState() => _CommentsScreenState();
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {
+  final TextEditingController _commentController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _commentController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final AppUser user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: const Text('Comments'),
         centerTitle: false,
       ),
-      body: const CommentCard(),
+      // StreamBuilder rebuilds app every time there is a new event from stream.
+      // In this case, we want the app to update the comments page every time a
+      // new comment is posted.
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .doc(widget.postData['postId'])
+            .collection('comments')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show loading animation if comments are still loading.
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          // Once all the comments are loaded in, display them.
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              return CommentCard(
+                  commentData: snapshot.data!.docs[index].data()
+                      as Map<String, dynamic>);
+            },
+          );
+        },
+      ),
       bottomNavigationBar: SafeArea(
         child: Container(
           height: kToolbarHeight,
@@ -32,19 +80,19 @@ class _CommentsScreenState extends State<CommentsScreen> {
           ),
           child: Row(
             children: [
-              const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1649658661765-010e15fc5c59?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80'),
+              CircleAvatar(
+                backgroundImage: NetworkImage(user.profilePictureUrl),
                 radius: 18.0,
               ),
-              const Expanded(
+              Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 16.0,
                     right: 8.0,
                   ),
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _commentController,
+                    decoration: const InputDecoration(
                       hintText: 'Write a comment',
                       border: InputBorder.none,
                     ),
@@ -52,7 +100,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  _commentController.clear();
+                  await FirestoreMethods().postComment(
+                    widget.postData['postId'],
+                    user.uid,
+                    _commentController.text,
+                    user.username,
+                    user.profilePictureUrl,
+                  );
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
