@@ -17,15 +17,15 @@ Future<Uint8List?> pickImage(ImageSource source) async {
 // Function for showing snack bar animation.
 void showSnackBar({
   required BuildContext context,
-  required String content,
-  required String label,
+  required String text,
+  String labelText = 'Dismiss',
   Color? backgroundColor,
   Color? textColor,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
-        content,
+        text,
         style: TextStyle(
           color: textColor,
         ),
@@ -33,7 +33,7 @@ void showSnackBar({
       backgroundColor: backgroundColor,
       action: SnackBarAction(
         onPressed: () {},
-        label: label,
+        label: labelText,
       ),
     ),
   );

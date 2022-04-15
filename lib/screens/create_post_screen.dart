@@ -98,8 +98,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       if (value.runtimeType == Post) {
         showSnackBar(
           context: context,
-          content: 'Posted successfully!',
-          label: 'Dismiss',
+          text: 'Posted successfully!',
         );
         setState(() {
           _post = null;
@@ -108,8 +107,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       } else if (value.runtimeType == String) {
         showSnackBar(
           context: context,
-          content: 'Something went wrong!',
-          label: 'Dismiss',
+          text: 'Something went wrong!',
         );
       }
     });

@@ -92,8 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
           // If an error occurs, we show a snack bar.
           showSnackBar(
             context: context,
-            content: 'Something went wrong.',
-            label: 'Dismiss',
+            text: 'Something went wrong.',
             backgroundColor: secondaryColor,
             textColor: primaryColor,
           );

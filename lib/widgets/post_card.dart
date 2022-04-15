@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/services/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +27,32 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   // Whether the like animation should show.
   bool shouldLikeAnimate = false;
+  // The number of comments on the post.
+  int numberOfComments = 0;
+
+  @override
+  initState() {
+    super.initState();
+    getNumberOfComments(widget.postData['postId']);
+  }
+
+  // Method for getting the number of comments on a post.
+  Future<void> getNumberOfComments(String postId) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .get();
+      numberOfComments = snapshot.docs.length;
+    } catch (e) {
+      showSnackBar(
+        context: context,
+        text: e.toString(),
+      );
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,15 +267,25 @@ class _PostCardState extends State<PostCard> {
                       )
                     : Container(),
                 InkWell(
-                  onTap: () {},
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'View all 69 comments',
-                      style: TextStyle(
-                        color: secondaryColor,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                        postData: widget.postData,
                       ),
                     ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: numberOfComments > 0
+                        ? Text(
+                            numberOfComments != 1
+                                ? 'View all $numberOfComments comments'
+                                : 'View $numberOfComments comment',
+                            style: const TextStyle(
+                              color: secondaryColor,
+                            ),
+                          )
+                        : Container(),
                   ),
                 ),
                 Padding(
