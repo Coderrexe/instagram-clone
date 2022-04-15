@@ -47,6 +47,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
             .collection('posts')
             .doc(widget.postData['postId'])
             .collection('comments')
+            .orderBy(
+              'datePublished',
+              descending: true,
+            )
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -101,7 +105,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
               InkWell(
                 onTap: () async {
-                  _commentController.clear();
                   await FirestoreMethods().postComment(
                     widget.postData['postId'],
                     user.uid,
@@ -109,6 +112,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     user.username,
                     user.profilePictureUrl,
                   );
+                  _commentController.clear();
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),

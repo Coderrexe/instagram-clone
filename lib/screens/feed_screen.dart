@@ -41,7 +41,10 @@ class FeedScreen extends StatelessWidget {
       // In this case, we want the app to update the feed page every time a new
       // post is posted.
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('datePublished', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           // Show loading animation if posts are still loading.
           if (snapshot.connectionState == ConnectionState.waiting) {

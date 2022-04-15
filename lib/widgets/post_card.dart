@@ -27,6 +27,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   // Whether the like animation should show.
   bool shouldLikeAnimate = false;
+
   // The number of comments on the post.
   int numberOfComments = 0;
 
@@ -51,7 +52,9 @@ class _PostCardState extends State<PostCard> {
         text: e.toString(),
       );
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
