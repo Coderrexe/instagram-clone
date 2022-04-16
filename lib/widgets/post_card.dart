@@ -118,6 +118,12 @@ class _PostCardState extends State<PostCard> {
                           ]
                               .map(
                                 (text) => InkWell(
+                                  onTap: () {
+                                    FirestoreMethods().deletePost(
+                                      widget.postData['postId'],
+                                    );
+                                    Navigator.of(context).pop();
+                                  },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12.0,
